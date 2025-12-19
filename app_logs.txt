@@ -1,0 +1,2 @@
+[ERROR] error message to file.
+[INFO] info message to file.
