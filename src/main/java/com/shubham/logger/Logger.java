@@ -6,7 +6,7 @@ import com.shubham.logger.appender.ConsoleAppender;
 
 public class Logger {
     private static volatile Logger instance;;
-    private final Appender appender;
+    private  Appender appender;
 
     private Logger() {
         this.appender = new ConsoleAppender();
@@ -21,6 +21,10 @@ public class Logger {
             }
         }
         return instance;
+    }
+
+    public void setAppender(Appender appender2) {
+        this.appender = appender2;
     }
 
     public void log(Loglevel level, String message) {
