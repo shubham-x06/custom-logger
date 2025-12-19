@@ -5,6 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class AsyncAppender implements Appender {
 
+    @SuppressWarnings("unused")
     private final Appender wrappedAppender;
     private final BlockingQueue<String> queue;
 
