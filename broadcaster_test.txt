@@ -1,0 +1,1 @@
+[ERROR] Message 2: This is on Console AND File!

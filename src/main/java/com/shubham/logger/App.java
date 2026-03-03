@@ -1,23 +1,24 @@
 package com.shubham.logger;
 
+import com.shubham.logger.appender.FileAppender;
+
 public class App {
     public static void main(String[] args) {
 
         Logger logger = Logger.getInstance();
 
-        System.out.println("--- TESTING LEVEL: INFO (Default) ---");
-        // INFO is 20. DEBUG is 10. ERROR is 30.
-        logger.log(Loglevel.DEBUG, "1. [DEBUG] You should NOT see this.");
-        logger.log(Loglevel.INFO, "2. [INFO]  You SHOULD see this.");
-        logger.log(Loglevel.ERROR, "3. [ERROR] You SHOULD see this.");
+        // 1. By default, it has ConsoleAppender.
+        logger.log(Loglevel.INFO, "Message 1: This is on the Console only.");
 
-        System.out.println("\n--- TESTING LEVEL: ERROR ---");
-        logger.setLevel(Loglevel.ERROR); // Now only ERROR passes (30)
-        logger.log(Loglevel.INFO, "4. [INFO]  You should NOT see this anymore.");
-        logger.log(Loglevel.ERROR, "5. [ERROR] You SHOULD see this.");
+        // 2. Add a FileAppender to the mix
+        // Now it has [ConsoleAppender, FileAppender]
+        logger.setAppender(new FileAppender("broadcaster_test.txt"));
 
-        System.out.println("\n--- TESTING LEVEL: DEBUG (Turn on everything) ---");
-        logger.setLevel(Loglevel.DEBUG); // Now everything passes (10+)
-        logger.log(Loglevel.DEBUG, "6. [DEBUG] You SHOULD see this now!");
+        System.out.println("--- Broadcasting Started ---");
+
+        // 3. This message should appear on BOTH
+        logger.log(Loglevel.ERROR, "Message 2: This is on Console AND File!");
+
+        System.out.println("Check 'broadcaster_test.txt'. Did Message 2 appear there?");
     }
 }
