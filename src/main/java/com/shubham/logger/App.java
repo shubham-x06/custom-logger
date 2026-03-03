@@ -1,32 +1,23 @@
 package com.shubham.logger;
 
-import com.shubham.logger.appender.AsyncAppender;
-import com.shubham.logger.appender.FileAppender;
-
 public class App {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+
         Logger logger = Logger.getInstance();
-        
-        FileAppender fileAppender = new FileAppender("async_logs.txt");
 
-        AsyncAppender asyncLogger = new AsyncAppender(fileAppender);
-        
-        logger.setAppender(asyncLogger);
+        System.out.println("--- TESTING LEVEL: INFO (Default) ---");
+        // INFO is 20. DEBUG is 10. ERROR is 30.
+        logger.log(Loglevel.DEBUG, "1. [DEBUG] You should NOT see this.");
+        logger.log(Loglevel.INFO, "2. [INFO]  You SHOULD see this.");
+        logger.log(Loglevel.ERROR, "3. [ERROR] You SHOULD see this.");
 
-        System.out.println("Starting high-speed logging ->");
-        long startTime = System.currentTimeMillis();
+        System.out.println("\n--- TESTING LEVEL: ERROR ---");
+        logger.setLevel(Loglevel.ERROR); // Now only ERROR passes (30)
+        logger.log(Loglevel.INFO, "4. [INFO]  You should NOT see this anymore.");
+        logger.log(Loglevel.ERROR, "5. [ERROR] You SHOULD see this.");
 
-        for (int i = 1; i <= 50; i++) {
-            logger.log(Loglevel.INFO, "Message number-> " + i);
-        }
-
-        long endTime = System.currentTimeMillis();
-        System.out.println("Finished sending 50 messages in " + (endTime - startTime) + "ms");
-
-        Thread.sleep(1000); 
-        System.out.println("Check 'async_logs.txt' to see if all messages arrived.");
-
-        // Logger logger2 = Logger.getInstance();
-        // System.out.println(logger == logger2); // should print true since both are same instance same object == checks reference  points to same memory location
+        System.out.println("\n--- TESTING LEVEL: DEBUG (Turn on everything) ---");
+        logger.setLevel(Loglevel.DEBUG); // Now everything passes (10+)
+        logger.log(Loglevel.DEBUG, "6. [DEBUG] You SHOULD see this now!");
     }
 }

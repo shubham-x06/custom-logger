@@ -3,14 +3,18 @@ package com.shubham.logger;
 import com.shubham.logger.appender.Appender;
 import com.shubham.logger.appender.ConsoleAppender;
 
-
 public class Logger {
-    private static volatile Logger instance;;
-    private  Appender appender;
+    private static volatile Logger instance;
+    private Appender appender;
+
+    private Loglevel currentLevel;
 
     private Logger() {
         this.appender = new ConsoleAppender();
+
+        this.currentLevel = Loglevel.INFO;
     }
+
     // thread-safe singleton
     public static Logger getInstance() {
         if (instance == null) {
@@ -27,8 +31,17 @@ public class Logger {
         this.appender = appender2;
     }
 
+    public void setLevel(Loglevel level) {
+        this.currentLevel = level;
+    }
+
     public void log(Loglevel level, String message) {
-        String logMessage = "[" + level + "] " + message;
-        appender.append(logMessage);
+
+        if (level.getSeverity() >= currentLevel.getSeverity()) {
+
+            String formattedMessage = "[" + level + "] " + message;
+
+            appender.append(formattedMessage);
+        }
     }
 }
