@@ -1,38 +1,36 @@
 package com.shubham.logger.appender;
 
+import com.shubham.logger.Loglevel;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class AsyncAppender implements Appender {
-
     @SuppressWarnings("unused")
     private final Appender wrappedAppender;
-    private final BlockingQueue<String> queue;
+    private final BlockingQueue<LogEvent> queue;
 
     public AsyncAppender(Appender wrappedAppender) {
         this.wrappedAppender = wrappedAppender;
         this.queue = new LinkedBlockingQueue<>(50);
-        
+
         Thread worker = new Thread(() -> {
             while (true) {
                 try {
-                    String message = queue.take();
-                    wrappedAppender.append(message);
+                    LogEvent event = queue.take();
+                    wrappedAppender.append(event.level, event.message);
                 } catch (InterruptedException e) {
                     break;
                 }
             }
         });
-        
-        worker.setDaemon(true); 
+        worker.setDaemon(true);
         worker.start();
     }
 
     @Override
-    public void append(String message) {
-       
-        if (!queue.offer(message)) {
-            System.err.println("Log Queue is full so Dropping message: " + message);
+    public void append(Loglevel level, String message) {
+        if (!queue.offer(new LogEvent(level, message))) {
+            System.err.println("Log Queue is full!");
         }
     }
 }

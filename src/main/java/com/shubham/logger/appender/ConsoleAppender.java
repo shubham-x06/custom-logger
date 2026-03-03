@@ -1,9 +1,18 @@
 package com.shubham.logger.appender;
 
+import com.shubham.logger.Loglevel;
+import com.shubham.logger.formatter.Formatter;
+
 public class ConsoleAppender implements Appender {
-    @Override
-    public void append(String message) {
-        System.out.println(message);
+
+    private final Formatter formatter;
+
+    public ConsoleAppender(Formatter formatter) {
+        this.formatter = formatter;
     }
-    
+
+    @Override
+    public void append(Loglevel level, String message) {
+        System.out.println(formatter.format(level, message));
+    }
 }
