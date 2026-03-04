@@ -1,64 +1,12 @@
-[2026-03-04 23:57:48] [main] [INFO] Booting up Network Simulator...
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #1 to worker pool...
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #2 to worker pool...
-[2026-03-04 23:57:48] [pool-1-thread-1] [DEBUG] Receiving payload for Packet #1
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #3 to worker pool...
-[2026-03-04 23:57:48] [pool-1-thread-2] [DEBUG] Receiving payload for Packet #2
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #4 to worker pool...
-[2026-03-04 23:57:48] [pool-1-thread-3] [DEBUG] Receiving payload for Packet #3
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #5 to worker pool...
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #6 to worker pool...
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #7 to worker pool...
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #8 to worker pool...
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #9 to worker pool...
-[2026-03-04 23:57:48] [main] [DEBUG] Dispatching packet #10 to worker pool...
-[2026-03-04 23:57:49] [pool-1-thread-3] [ERROR] Collision detected! Dropping Packet #3
-[2026-03-04 23:57:49] [pool-1-thread-3] [DEBUG] Receiving payload for Packet #4
-[2026-03-04 23:57:49] [pool-1-thread-1] [INFO] Packet #1 routed successfully.
-[2026-03-04 23:57:49] [pool-1-thread-2] [INFO] Packet #2 routed successfully.
-[2026-03-04 23:57:49] [pool-1-thread-1] [DEBUG] Receiving payload for Packet #5
-[2026-03-04 23:57:49] [pool-1-thread-2] [DEBUG] Receiving payload for Packet #6
-[2026-03-04 23:57:49] [pool-1-thread-1] [INFO] Packet #5 routed successfully.
-[2026-03-04 23:57:49] [pool-1-thread-3] [INFO] Packet #4 routed successfully.
-[2026-03-04 23:57:49] [pool-1-thread-1] [DEBUG] Receiving payload for Packet #7
-[2026-03-04 23:57:49] [pool-1-thread-3] [DEBUG] Receiving payload for Packet #8
-[2026-03-04 23:57:49] [pool-1-thread-1] [ERROR] Collision detected! Dropping Packet #7
-[2026-03-04 23:57:49] [pool-1-thread-1] [DEBUG] Receiving payload for Packet #9
-[2026-03-04 23:57:49] [pool-1-thread-2] [INFO] Packet #6 routed successfully.
-[2026-03-04 23:57:49] [pool-1-thread-2] [DEBUG] Receiving payload for Packet #10
-[2026-03-04 23:57:49] [pool-1-thread-2] [INFO] Packet #10 routed successfully.
-[2026-03-04 23:57:49] [pool-1-thread-3] [INFO] Packet #8 routed successfully.
-[2026-03-04 23:57:49] [pool-1-thread-1] [INFO] Packet #9 routed successfully.
-[2026-03-04 23:57:49] [main] [INFO] Server shutdown complete. All packets resolved.
-[2026-03-05 00:07:03] [main] [INFO] Booting up Network Simulator...
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #1 to worker pool...
-[2026-03-05 00:07:03] [pool-1-thread-1] [DEBUG] Receiving payload for Packet #1
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #2 to worker pool...
-[2026-03-05 00:07:03] [pool-1-thread-2] [DEBUG] Receiving payload for Packet #2
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #3 to worker pool...
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #4 to worker pool...
-[2026-03-05 00:07:03] [pool-1-thread-3] [DEBUG] Receiving payload for Packet #3
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #5 to worker pool...
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #6 to worker pool...
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #7 to worker pool...
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #8 to worker pool...
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #9 to worker pool...
-[2026-03-05 00:07:03] [main] [DEBUG] Dispatching packet #10 to worker pool...
-[2026-03-05 00:07:03] [pool-1-thread-2] [INFO] Packet #2 routed successfully.
-[2026-03-05 00:07:03] [pool-1-thread-2] [DEBUG] Receiving payload for Packet #4
-[2026-03-05 00:07:04] [pool-1-thread-2] [INFO] Packet #4 routed successfully.
-[2026-03-05 00:07:04] [pool-1-thread-2] [DEBUG] Receiving payload for Packet #5
-[2026-03-05 00:07:04] [pool-1-thread-1] [INFO] Packet #1 routed successfully.
-[2026-03-05 00:07:04] [pool-1-thread-1] [DEBUG] Receiving payload for Packet #6
-[2026-03-05 00:07:04] [pool-1-thread-3] [INFO] Packet #3 routed successfully.
-[2026-03-05 00:07:04] [pool-1-thread-3] [DEBUG] Receiving payload for Packet #7
-[2026-03-05 00:07:04] [pool-1-thread-2] [INFO] Packet #5 routed successfully.
-[2026-03-05 00:07:04] [pool-1-thread-2] [DEBUG] Receiving payload for Packet #8
-[2026-03-05 00:07:04] [pool-1-thread-3] [INFO] Packet #7 routed successfully.
-[2026-03-05 00:07:04] [pool-1-thread-3] [DEBUG] Receiving payload for Packet #9
-[2026-03-05 00:07:04] [pool-1-thread-1] [INFO] Packet #6 routed successfully.
-[2026-03-05 00:07:04] [pool-1-thread-1] [DEBUG] Receiving payload for Packet #10
-[2026-03-05 00:07:04] [pool-1-thread-2] [ERROR] Collision detected! Dropping Packet #8
-[2026-03-05 00:07:04] [pool-1-thread-3] [INFO] Packet #9 routed successfully.
-[2026-03-05 00:07:05] [pool-1-thread-1] [INFO] Packet #10 routed successfully.
-[2026-03-05 00:07:05] [main] [INFO] Server shutdown complete. All packets resolved.
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 489
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 490
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 491
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 492
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 493
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 494
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 495
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 496
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 497
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 498
+[2026-03-05 00:21:09] [main] [DEBUG] Stress log message number 499
+[2026-03-05 00:21:09] [main] [INFO] Stress test completed.
