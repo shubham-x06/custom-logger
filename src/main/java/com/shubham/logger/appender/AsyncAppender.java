@@ -1,6 +1,8 @@
 package com.shubham.logger.appender;
 
 import com.shubham.logger.Loglevel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -17,8 +19,18 @@ public class AsyncAppender implements Appender {
             while (true) {
                 try {
                     LogEvent event = queue.take();
-                    wrappedAppender.append(event.level, event.message);
+
+                    List<LogEvent> batch = new ArrayList<>();
+                    batch.add(event);
+
+                    queue.drainTo(batch);
+
+                    for (LogEvent e : batch) {
+                        wrappedAppender.append(e.level, e.message);
+                    }
+
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     break;
                 }
             }
