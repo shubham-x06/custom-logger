@@ -35,7 +35,7 @@ class AsyncAppenderTest {
         CountDownLatch latch = new CountDownLatch(3);
         List<String> messages = new ArrayList<>();
         
-        Appender mockAppender = (level, message) -> {
+        Appender mockAppender = (level, message, source) -> {
             synchronized (messages) {
                 messages.add(message);
             }
@@ -43,9 +43,9 @@ class AsyncAppenderTest {
         };
 
         AsyncAppender asyncAppender = new AsyncAppender(mockAppender);
-        asyncAppender.append(Loglevel.INFO, "Msg 1");
-        asyncAppender.append(Loglevel.INFO, "Msg 2");
-        asyncAppender.append(Loglevel.INFO, "Msg 3");
+        asyncAppender.append(Loglevel.INFO, "Msg 1", "test");
+        asyncAppender.append(Loglevel.INFO, "Msg 2", "test");
+        asyncAppender.append(Loglevel.INFO, "Msg 3", "test");
 
         assertTrue(latch.await(2, TimeUnit.SECONDS), "Timeout waiting for async processing");
         
@@ -62,7 +62,7 @@ class AsyncAppenderTest {
         CountDownLatch releasedLatch = new CountDownLatch(1);
 
         // This appender blocks completely, meaning the queue will stop draining
-        Appender blockingAppender = (level, message) -> {
+        Appender blockingAppender = (level, message, source) -> {
             try {
                 // First event comes here and waits. Worker thread is now blocked.
                 hangLatch.await(5, TimeUnit.SECONDS); 
@@ -76,15 +76,15 @@ class AsyncAppenderTest {
         AsyncAppender asyncAppender = new AsyncAppender(blockingAppender);
 
         // Put 1 event, which gets taken by the background thread, so queue is empty but thread is blocked.
-        asyncAppender.append(Loglevel.INFO, "Initial blocking message");
+        asyncAppender.append(Loglevel.INFO, "Initial blocking message", "test");
 
         // Now queue (capacity 50) is free to fill up.
         for (int i = 0; i < 50; i++) {
-            asyncAppender.append(Loglevel.INFO, "Filler " + i);
+            asyncAppender.append(Loglevel.INFO, "Filler " + i, "test");
         }
 
         // Now queue is full (50 elements inside). The next append should fail and print to System.err
-        asyncAppender.append(Loglevel.ERROR, "Overflow message");
+        asyncAppender.append(Loglevel.ERROR, "Overflow message", "test");
 
         assertTrue(errStreamCaptor.toString().contains("Log Queue is full!"));
 

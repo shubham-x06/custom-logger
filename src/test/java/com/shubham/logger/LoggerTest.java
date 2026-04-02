@@ -20,7 +20,7 @@ class LoggerTest {
         logger.clearAppenders();
         capturedMessages.clear();
 
-        Appender mockAppender = (level, message) -> capturedMessages.add(level + ": " + message);
+        Appender mockAppender = (level, message, source) -> capturedMessages.add(level + ": " + message);
         logger.addAppender(mockAppender);
     }
 

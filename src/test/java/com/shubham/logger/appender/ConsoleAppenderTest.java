@@ -28,12 +28,12 @@ class ConsoleAppenderTest {
 
     @Test
     void testConsoleAppenderFormatsAndPrints() {
-        Formatter mockFormatter = (level, msg) -> level + ": " + msg;
+        Formatter mockFormatter = (level, msg, src) -> level + " [" + src + "]: " + msg;
         ConsoleAppender appender = new ConsoleAppender(mockFormatter);
 
-        appender.append(Loglevel.INFO, "Test message");
+        appender.append(Loglevel.INFO, "Test message", "test");
 
         // System.out.println appends line separator
-        assertEquals("INFO: Test message" + System.lineSeparator(), outputStreamCaptor.toString());
+        assertEquals("INFO [test]: Test message" + System.lineSeparator(), outputStreamCaptor.toString());
     }
 }

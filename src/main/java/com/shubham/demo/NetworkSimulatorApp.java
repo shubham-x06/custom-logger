@@ -21,7 +21,7 @@ public class NetworkSimulatorApp {
 
         logger.setLevel(Loglevel.DEBUG);
 
-        logger.addAppender(new ConsoleAppender((level, msg) -> "[" + level + "] " + msg));
+        logger.addAppender(new ConsoleAppender((level, msg, src) -> "[" + level + "] [" + src + "] " + msg));
         logger.addAppender(new FileAppender("simulation_logs.txt", new DetailedFormatter()));
 
         logger.log(Loglevel.INFO, "Booting up Network Simulator...");

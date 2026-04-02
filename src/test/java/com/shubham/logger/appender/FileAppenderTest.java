@@ -16,18 +16,18 @@ class FileAppenderTest {
     @Test
     void testFileAppenderWritesToFile() throws IOException {
         Path tempFile = Files.createTempFile("testLog", ".txt");
-        Formatter mockFormatter = (level, msg) -> level + " - " + msg;
+        Formatter mockFormatter = (level, msg, src) -> level + " [" + src + "] - " + msg;
 
         try (FileAppender appender = new FileAppender(tempFile.toString(), mockFormatter)) {
-            appender.append(Loglevel.DEBUG, "Debug log");
-            appender.append(Loglevel.ERROR, "Error log");
+            appender.append(Loglevel.DEBUG, "Debug log", "test");
+            appender.append(Loglevel.ERROR, "Error log", "test");
         } 
 
         // File is flushed and written properly inside close() (or during each append).
         String content = Files.readString(tempFile);
         
-        assertTrue(content.contains("DEBUG - Debug log"));
-        assertTrue(content.contains("ERROR - Error log"));
+        assertTrue(content.contains("DEBUG [test] - Debug log"));
+        assertTrue(content.contains("ERROR [test] - Error log"));
 
         Files.delete(tempFile);
     }

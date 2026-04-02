@@ -19,15 +19,7 @@ public class AsyncAppender implements Appender {
             while (true) {
                 try {
                     LogEvent event = queue.take();
-
-                    List<LogEvent> batch = new ArrayList<>();
-                    batch.add(event);
-
-                    queue.drainTo(batch);
-
-                    for (LogEvent e : batch) {
-                        wrappedAppender.append(e.level, e.message, e.source);
-                    }
+                    wrappedAppender.append(event.level, event.message, event.source);
 
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
