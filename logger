@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Simple shell wrapper to execute the packaged JAR
+JAR_PATH="$(dirname "$0")/target/logger-cli.jar"
+
+if [ ! -f "$JAR_PATH" ]; then
+    echo "ERROR: JAR not found at $JAR_PATH. Please run 'mvn clean package' first."
+    exit 1
+fi
+
+exec java -jar "$JAR_PATH" "$@"

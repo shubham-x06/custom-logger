@@ -2,47 +2,44 @@ package com.shubham.logger.appender;
 
 import com.shubham.logger.Loglevel;
 import com.shubham.logger.formatter.Formatter;
-import java.io.File;
+
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-public class FileAppender implements Appender {
+public class FileAppender implements Appender, AutoCloseable {
 
-    private final String filePath;
     private final Formatter formatter;
-
-    private final long maxFileSize = 1024 * 1024; // 1 MB
+    private FileWriter writer;
 
     public FileAppender(String filePath, Formatter formatter) {
-        this.filePath = filePath;
         this.formatter = formatter;
-    }
-
-    private void rotate() {
-        File file = new File(filePath);
-
-        if (file.exists() && file.length() > maxFileSize) {
-            File rotated = new File(filePath + ".1");
-            if (rotated.exists()) {
-                rotated.delete();
-            }
-            file.renameTo(rotated);
+        try {
+            this.writer = new FileWriter(filePath, true); // Append mode
+        } catch (IOException e) {
+            System.err.println("Failed to initialize FileAppender: " + e.getMessage());
         }
     }
 
     @Override
-    public void append(Loglevel level, String message) {
+    public synchronized void append(Loglevel level, String message) {
+        if (writer != null) {
+            try {
+                writer.write(formatter.format(level, message) + System.lineSeparator());
+                writer.flush();
+            } catch (IOException e) {
+                System.err.println("Failed to write to file: " + e.getMessage());
+            }
+        }
+    }
 
-        rotate();
-
-        try (FileWriter fw = new FileWriter(filePath, true);
-                PrintWriter pw = new PrintWriter(fw)) {
-
-            pw.println(formatter.format(level, message));
-
-        } catch (IOException e) {
-            System.err.println("CRITICAL ERROR: Could not write to log file");
+    @Override
+    public synchronized void close() {
+        if (writer != null) {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                System.err.println("Failed to close FileWriter: " + e.getMessage());
+            }
         }
     }
 }

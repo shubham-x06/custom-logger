@@ -6,7 +6,7 @@ A thread-safe, interface-driven logging framework built in Java. Designed to han
 
 * **Singleton Pattern:** Ensures a single, globally accessible logger instance with **Double-Checked Locking** for thread safety.
 * **Strategy Pattern:** Supports pluggable output destinations (`ConsoleAppender`, `FileAppender`) that can be swapped at runtime.
-* **Asynchronous Processing:** Implements th **Producer-Consumer pattern** using a `BlockingQueue` and a dedicated worker thread to decouple log submission from disk I/O.
+* **Asynchronous Processing:** Implements the **Producer-Consumer pattern** using a `BlockingQueue` and a dedicated worker thread to decouple log submission from disk I/O.
 * **Zero-Loss Design:** Handles file resource management using "Try-With-Resources" to prevent memory leaks.
 
 ## 🛠️ Architecture
