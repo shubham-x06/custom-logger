@@ -12,7 +12,7 @@ public class Logger {
     private Loglevel currentLevel;
 
     private Logger() {
-        this.appenders.add(new ConsoleAppender((level, msg) -> "[" + level + "] " + msg));
+        this.appenders.add(new ConsoleAppender((level, msg, src) -> "[" + level + "] [" + src + "] " + msg));
         this.currentLevel = Loglevel.INFO;
     }
 
@@ -40,9 +40,13 @@ public class Logger {
     }
 
     public void log(Loglevel level, String message) {
+        log(level, message, "local");
+    }
+
+    public void log(Loglevel level, String message, String source) {
         if (level.getSeverity() >= currentLevel.getSeverity()) {
             for (Appender appender : appenders) {
-                appender.append(level, message);
+                appender.append(level, message, source);
             }
         }
     }

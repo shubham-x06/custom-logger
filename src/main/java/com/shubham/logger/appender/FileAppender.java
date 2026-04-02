@@ -21,10 +21,10 @@ public class FileAppender implements Appender, AutoCloseable {
     }
 
     @Override
-    public synchronized void append(Loglevel level, String message) {
+    public synchronized void append(Loglevel level, String message, String source) {
         if (writer != null) {
             try {
-                writer.write(formatter.format(level, message) + System.lineSeparator());
+                writer.write(formatter.format(level, message, source) + System.lineSeparator());
                 writer.flush();
             } catch (IOException e) {
                 System.err.println("Failed to write to file: " + e.getMessage());

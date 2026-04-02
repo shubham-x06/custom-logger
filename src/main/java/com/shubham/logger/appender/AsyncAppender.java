@@ -7,7 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class AsyncAppender implements Appender {
-    @SuppressWarnings("unused")
+    
     private final Appender wrappedAppender;
     private final BlockingQueue<LogEvent> queue;
 
@@ -26,7 +26,7 @@ public class AsyncAppender implements Appender {
                     queue.drainTo(batch);
 
                     for (LogEvent e : batch) {
-                        wrappedAppender.append(e.level, e.message);
+                        wrappedAppender.append(e.level, e.message, e.source);
                     }
 
                 } catch (InterruptedException e) {
@@ -40,8 +40,8 @@ public class AsyncAppender implements Appender {
     }
 
     @Override
-    public void append(Loglevel level, String message) {
-        if (!queue.offer(new LogEvent(level, message))) {
+    public void append(Loglevel level, String message, String source) {
+        if (!queue.offer(new LogEvent(level, message, source))) {
             System.err.println("Log Queue is full!");
         }
     }

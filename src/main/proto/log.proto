@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.shubham.logger.grpc";
+option java_outer_classname = "LogProto";
+
+package log;
+
+service LogService {
+    rpc Send (LogEventPayload) returns (LogResponse) {}
+}
+
+message LogEventPayload {
+    string level = 1;
+    string message = 2;
+    string source = 3;
+    string timestamp = 4;
+}
+
+message LogResponse {
+    bool success = 1;
+    string error_message = 2;
+}

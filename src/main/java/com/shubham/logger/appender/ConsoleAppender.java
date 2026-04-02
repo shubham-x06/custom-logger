@@ -12,7 +12,7 @@ public class ConsoleAppender implements Appender {
     }
 
     @Override
-    public void append(Loglevel level, String message) {
-        System.out.println(formatter.format(level, message));
+    public void append(Loglevel level, String message, String source) {
+        System.out.println(formatter.format(level, message, source));
     }
 }
