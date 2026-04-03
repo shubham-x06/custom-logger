@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gemini Debug Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; display: flex; height: 100vh; background: #1e1e1e; color: #d4d4d4; }
+        .sidebar { width: 300px; background: #252526; border-right: 1px solid #333; padding: 20px; display: flex; flex-direction: column; }
+        .main { flex-grow: 1; display: flex; flex-direction: column; }
+        .panel { flex: 1; padding: 20px; overflow-y: auto; border-bottom: 1px solid #333; }
+        h2 { font-size: 1.2rem; margin-top: 0; color: #fff; border-bottom: 1px solid #444; padding-bottom: 5px; }
+        .banner { background: #d32f2f; color: white; padding: 10px; text-align: center; display: none; }
+        input, button { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #444; background: #3c3c3c; color: white; border-radius: 4px; box-sizing: border-box; }
+        button { background: #0e639c; color: white; cursor: pointer; border: none; }
+        button:hover { background: #1177bb; }
+        pre { background: #1e1e1e; padding: 10px; border-radius: 5px; font-family: Consolas, monospace; overflow-x: auto; white-space: pre-wrap; font-size: 0.9rem;}
+        .log-error { color: #f48771; }
+        .log-info { color: #cccccc; }
+        .log-debug { color: #6a9955; opacity: 0.7; }
+        .file-list { flex-grow: 1; overflow-y: auto; margin-top: 20px; }
+        .file-item { padding: 5px 0; cursor: pointer; color: #4fc1ff; font-size: 0.9rem; }
+        .file-item:hover { text-decoration: underline; }
+        .result-field { margin-bottom: 15px; }
+        .result-label { font-weight: bold; color: #9cdcfe; margin-bottom: 5px; display: block; }
+        .severity-badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-weight: bold; font-size: 0.8rem; }
+        .sev-high { background: #7c2424; color: #ffcccc; border: 1px solid #f48771;}
+        .sev-medium { background: #825c00; color: #ffdd99; border: 1px solid #cca700;}
+        .sev-low { background: #1b4b1b; color: #b3ffb3; border: 1px solid #6a9955;}
+    </style>
+</head>
+<body>
+
+<div th:if="${!hasApiKey}" class="banner" style="display:block;">
+    <strong>ERROR:</strong> GEMINI_API_KEY is not set. The analysis features will not work.
+</div>
+
+<div class="sidebar">
+    <h2>Analysis Configuration</h2>
+    <label>File Path:</label>
+    <input type="text" id="filePathInput" placeholder="./logs/app.log">
+    
+    <label>Last N Lines:</label>
+    <input type="number" id="lastNInput" value="50">
+    
+    <button onclick="runAnalysis()">Run Gemini Analysis</button>
+
+    <h2 style="margin-top: 30px;">Available Logs</h2>
+    <button onclick="fetchFiles()" style="background: #3c3c3c; border: 1px solid #555;">Refresh List</button>
+    <div class="file-list" id="fileList"></div>
+</div>
+
+<div class="main">
+    <div class="panel" id="logPanel">
+        <h2>Raw Log Tail</h2>
+        <pre id="logPreview">Select a file and run analysis to load logs.</pre>
+    </div>
+    <div class="panel" id="analysisPanel">
+        <h2>Gemini Analysis</h2>
+        <div id="resultContent" style="display:none;">
+            <div class="result-field">
+                <span class="result-label">Severity</span>
+                <div id="resSeverity" class="severity-badge"></div>
+            </div>
+            <div class="result-field">
+                <span class="result-label">Root Cause</span>
+                <div id="resRootCause"></div>
+            </div>
+            <div class="result-field">
+                <span class="result-label">Explanation</span>
+                <div id="resExplanation"></div>
+            </div>
+            <div class="result-field">
+                <span class="result-label">Suggested Fix</span>
+                <pre id="resFix"></pre>
+            </div>
+        </div>
+        <div id="loading" style="display:none; color: #cca700;">Analyzing logs... Please wait.</div>
+        <div id="errorMsg" style="display:none; color: #f48771;"></div>
+    </div>
+</div>
+
+<script>
+    async function fetchFiles() {
+        const fileList = document.getElementById('fileList');
+        fileList.innerHTML = 'Loading...';
+        try {
+            const res = await fetch('/api/files');
+            const data = await res.json();
+            fileList.innerHTML = '';
+            data.forEach(f => {
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.textContent = f.name + ' (' + f.sizeKb + ' KB)';
+                div.onclick = () => document.getElementById('filePathInput').value = f.path;
+                fileList.appendChild(div);
+            });
+        } catch (e) {
+            fileList.innerHTML = '<span style="color:#f48771">Failed to load files</span>';
+        }
+    }
+
+    async function runAnalysis() {
+        const filePath = document.getElementById('filePathInput').value;
+        const lastN = document.getElementById('lastNInput').value;
+        if (!filePath) return alert("Please specify a file path.");
+
+        // Load logs
+        document.getElementById('logPreview').textContent = 'Loading logs...';
+        fetch(`/api/logs?file=${encodeURIComponent(filePath)}&last=${lastN}`)
+            .then(r => r.json())
+            .then(lines => {
+                const pre = document.getElementById('logPreview');
+                pre.innerHTML = '';
+                lines.forEach(line => {
+                    const span = document.createElement('span');
+                    if (line.includes('ERROR')) span.className = 'log-error';
+                    else if (line.includes('DEBUG')) span.className = 'log-debug';
+                    else span.className = 'log-info';
+                    span.textContent = line + '\n';
+                    pre.appendChild(span);
+                });
+            });
+
+        // Run analysis
+        document.getElementById('resultContent').style.display = 'none';
+        document.getElementById('errorMsg').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+
+        try {
+            const res = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filePath, lastN })
+            });
+            const data = await res.json();
+            document.getElementById('loading').style.display = 'none';
+
+            if (res.ok) {
+                document.getElementById('resultContent').style.display = 'block';
+                document.getElementById('resRootCause').textContent = data.rootCause;
+                document.getElementById('resExplanation').textContent = data.explanation;
+                document.getElementById('resFix').textContent = data.fix;
+                
+                const sevBadge = document.getElementById('resSeverity');
+                sevBadge.textContent = data.severity;
+                sevBadge.className = 'severity-badge';
+                if (data.severity === 'HIGH') sevBadge.classList.add('sev-high');
+                else if (data.severity === 'MEDIUM') sevBadge.classList.add('sev-medium');
+                else sevBadge.classList.add('sev-low');
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+                document.getElementById('errorMsg').textContent = 'Error: ' + (data.error || 'Unknown failure');
+            }
+        } catch (e) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('errorMsg').style.display = 'block';
+            document.getElementById('errorMsg').textContent = 'Connection error: ' + e.message;
+        }
+    }
+
+    // Initial load
+    fetchFiles();
+</script>
+</body>
+</html>

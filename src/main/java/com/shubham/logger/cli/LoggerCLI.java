@@ -8,7 +8,8 @@ import picocli.CommandLine.Command;
         subcommands = {
                 ConfigCommand.class,
                 LogCommand.class,
-                TailCommand.class
+                TailCommand.class,
+                DebugCommand.class
         })
 public class LoggerCLI implements Runnable {
 
