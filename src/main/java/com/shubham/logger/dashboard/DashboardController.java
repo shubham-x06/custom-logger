@@ -30,7 +30,7 @@ public class DashboardController {
         this.config = new DebugConfig();
         GeminiClient client = null;
         try {
-            client = new GeminiClient(); // Might throw exception if key is missing
+            client = new GeminiClient(config.getModel()); // Might throw exception if key is missing
         } catch (Exception e) {
             // Handled gracefully so dashboard still runs
         }

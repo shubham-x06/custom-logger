@@ -38,7 +38,7 @@ public class DebugCommand implements Runnable {
         DebugConfig config = new DebugConfig();
         int lastN = (this.last != null) ? this.last : config.getMaxLines();
 
-        GeminiClient client = new GeminiClient();
+        GeminiClient client = new GeminiClient(config.getModel());
         GeminiDebugAssistant assistant = new GeminiDebugAssistant(client);
         Path logFile = Path.of(file);
 
@@ -49,6 +49,9 @@ public class DebugCommand implements Runnable {
                 printResult(result);
             } catch (Exception e) {
                 System.err.println("Analysis failed: " + e.getMessage());
+                if (e.getCause() != null) {
+                    System.err.println("Cause: " + e.getCause());
+                }
             }
         } else {
             System.out.println("[watching " + file + " — Ctrl+C to stop]");

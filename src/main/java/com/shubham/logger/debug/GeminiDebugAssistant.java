@@ -43,7 +43,8 @@ public class GeminiDebugAssistant {
     public DebugResult analyze(Path logFile, int lastN) {
         List<String> tailLines;
         try {
-            List<String> allLines = Files.readAllLines(logFile);
+            String content = new String(Files.readAllBytes(logFile), java.nio.charset.StandardCharsets.UTF_8);
+            List<String> allLines = java.util.Arrays.asList(content.split("\\r?\\n"));
             int start = Math.max(0, allLines.size() - lastN);
             tailLines = allLines.subList(start, allLines.size());
         } catch (IOException e) {

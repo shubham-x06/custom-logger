@@ -3,3 +3,4 @@
 /.vscode
 *.class
 *.log
+node_modules

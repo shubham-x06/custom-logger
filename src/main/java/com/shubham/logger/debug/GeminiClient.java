@@ -8,16 +8,24 @@ import okhttp3.*;
 import java.io.IOException;
 
 public class GeminiClient {
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
     private final String apiKey;
     private final OkHttpClient httpClient;
     private final Gson gson;
+    private final String apiUrl;
 
-    public GeminiClient() {
+    public GeminiClient(String model) {
         this.apiKey = System.getenv("GEMINI_API_KEY");
         if (this.apiKey == null || this.apiKey.trim().isEmpty()) {
             throw new IllegalStateException("GEMINI_API_KEY not set");
         }
+        
+        // Default to a fallback if not provided
+        String activeModel = (model == null || model.isEmpty()) ? "gemini-1.5-flash" : model;
+        // Fix spaces if the user types "3.1 flash"
+        activeModel = activeModel.trim().replace(" ", "-");
+        
+        this.apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/" + activeModel + ":generateContent?key=" + this.apiKey;
+        
         this.httpClient = new OkHttpClient();
         this.gson = new Gson();
     }
@@ -47,7 +55,7 @@ public class GeminiClient {
         );
 
         Request request = new Request.Builder()
-                .url(API_URL + apiKey)
+                .url(apiUrl)
                 .post(body)
                 .build();
 
