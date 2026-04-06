@@ -7,24 +7,23 @@ import okhttp3.*;
 
 import java.io.IOException;
 
-public class GeminiClient {
+public class GroqClient {
     private final String apiKey;
     private final OkHttpClient httpClient;
     private final Gson gson;
     private final String apiUrl;
+    private final String activeModel;
 
-    public GeminiClient(String model) {
-        this.apiKey = System.getenv("GEMINI_API_KEY");
+    public GroqClient(String model) {
+        this.apiKey = System.getenv("GROQ_API_KEY");
         if (this.apiKey == null || this.apiKey.trim().isEmpty()) {
-            throw new IllegalStateException("GEMINI_API_KEY not set");
+            throw new IllegalStateException("GROQ_API_KEY not set");
         }
         
         // Default to a fallback if not provided
-        String activeModel = (model == null || model.isEmpty()) ? "gemini-2.0-flash" : model;
-        // Fix spaces if the user types "3.1 flash"
-        activeModel = activeModel.trim().replace(" ", "-");
+        this.activeModel = (model == null || model.isEmpty()) ? "llama3-8b-8192" : model;
         
-        this.apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/" + activeModel + ":generateContent?key=" + this.apiKey;
+        this.apiUrl = "https://api.groq.com/openai/v1/chat/completions";
         
         this.httpClient = new OkHttpClient.Builder()
                 .connectTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
@@ -35,23 +34,23 @@ public class GeminiClient {
     }
 
     public String complete(String systemPrompt, String userPrompt) {
-        String fullPrompt = systemPrompt + "\n\n" + userPrompt;
-
-        JsonObject textPart = new JsonObject();
-        textPart.addProperty("text", fullPrompt);
-
-        JsonArray partsArray = new JsonArray();
-        partsArray.add(textPart);
-
-        JsonObject contentObj = new JsonObject();
-        contentObj.addProperty("role", "user");
-        contentObj.add("parts", partsArray);
-
-        JsonArray contentsArray = new JsonArray();
-        contentsArray.add(contentObj);
+        JsonArray messagesList = new JsonArray();
+        
+        JsonObject systemMsg = new JsonObject();
+        systemMsg.addProperty("role", "system");
+        systemMsg.addProperty("content", systemPrompt);
+        messagesList.add(systemMsg);
+        
+        JsonObject userMsg = new JsonObject();
+        userMsg.addProperty("role", "user");
+        userMsg.addProperty("content", userPrompt);
+        messagesList.add(userMsg);
 
         JsonObject requestBodyJson = new JsonObject();
-        requestBodyJson.add("contents", contentsArray);
+        requestBodyJson.add("messages", messagesList);
+        requestBodyJson.addProperty("model", this.activeModel);
+        requestBodyJson.addProperty("stream", false);
+        requestBodyJson.addProperty("temperature", 0.0);
 
         RequestBody body = RequestBody.create(
                 gson.toJson(requestBodyJson),
@@ -60,23 +59,23 @@ public class GeminiClient {
 
         Request request = new Request.Builder()
                 .url(apiUrl)
+                .addHeader("Authorization", "Bearer " + this.apiKey)
                 .post(body)
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
             String responseBody = response.body() != null ? response.body().string() : "";
             if (!response.isSuccessful()) {
-                throw new RuntimeException("Gemini API call failed with status " + response.code() + ": " + responseBody);
+                throw new RuntimeException("Groq API call failed with status " + response.code() + ": " + responseBody);
             }
 
             JsonObject responseJson = gson.fromJson(responseBody, JsonObject.class);
             return responseJson
-                    .getAsJsonArray("candidates").get(0).getAsJsonObject()
-                    .getAsJsonObject("content")
-                    .getAsJsonArray("parts").get(0).getAsJsonObject()
-                    .get("text").getAsString();
+                    .getAsJsonArray("choices").get(0).getAsJsonObject()
+                    .getAsJsonObject("message")
+                    .get("content").getAsString();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to call Gemini API", e);
+            throw new RuntimeException("Failed to call Groq API", e);
         }
     }
 }

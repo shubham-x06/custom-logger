@@ -48,7 +48,7 @@
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
 
-    <!-- Gemini Client dependencies -->
+    <!-- Grok Client dependencies -->
     <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>

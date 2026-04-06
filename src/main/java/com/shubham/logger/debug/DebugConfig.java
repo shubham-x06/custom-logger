@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class DebugConfig {
-    private String model = "gemini-2.0-flash";
+    private String model = "llama3-8b-8192";
     private int maxLines = 50;
     private int watchDebounceMs = 2000;
     private String logDirectory = "./logs";
@@ -15,9 +15,9 @@ public class DebugConfig {
         try (InputStream in = getClass().getClassLoader().getResourceAsStream("logger-debug.properties")) {
             if (in != null) {
                 props.load(in);
-                this.model = props.getProperty("gemini.model", this.model);
-                this.maxLines = Integer.parseInt(props.getProperty("gemini.max_lines", String.valueOf(this.maxLines)));
-                this.watchDebounceMs = Integer.parseInt(props.getProperty("gemini.watch_debounce_ms", String.valueOf(this.watchDebounceMs)));
+                this.model = props.getProperty("groq.model", this.model);
+                this.maxLines = Integer.parseInt(props.getProperty("groq.max_lines", String.valueOf(this.maxLines)));
+                this.watchDebounceMs = Integer.parseInt(props.getProperty("groq.watch_debounce_ms", String.valueOf(this.watchDebounceMs)));
                 this.logDirectory = props.getProperty("logger.log-directory", this.logDirectory);
             }
         } catch (IOException | NumberFormatException e) {

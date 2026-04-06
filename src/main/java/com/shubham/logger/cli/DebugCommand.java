@@ -2,8 +2,8 @@ package com.shubham.logger.cli;
 
 import com.shubham.logger.debug.DebugConfig;
 import com.shubham.logger.debug.DebugResult;
-import com.shubham.logger.debug.GeminiClient;
-import com.shubham.logger.debug.GeminiDebugAssistant;
+import com.shubham.logger.debug.GroqClient;
+import com.shubham.logger.debug.GroqDebugAssistant;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -14,7 +14,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 
-@Command(name = "debug", description = "AI-powered debug analysis of logger files using Gemini")
+@Command(name = "debug", description = "AI-powered debug analysis of logger files using Groq")
 public class DebugCommand implements Runnable {
 
     @Option(names = {"--file"}, required = true, description = "Path to the log file")
@@ -28,22 +28,22 @@ public class DebugCommand implements Runnable {
 
     @Override
     public void run() {
-        if (System.getenv("GEMINI_API_KEY") == null || System.getenv("GEMINI_API_KEY").trim().isEmpty()) {
-            System.err.println("ERROR: GEMINI_API_KEY is not set.\n" +
-                    "Run: export GEMINI_API_KEY=your_key_here\n" +
-                    "Get a key at: https://aistudio.google.com/app/apikey");
+        if (System.getenv("GROQ_API_KEY") == null || System.getenv("GROQ_API_KEY").trim().isEmpty()) {
+            System.err.println("ERROR: GROQ_API_KEY is not set.\n" +
+                    "Run: export GROQ_API_KEY=your_key_here\n" +
+                    "Get a key at: https://console.groq.com");
             System.exit(1);
         }
 
         DebugConfig config = new DebugConfig();
         int lastN = (this.last != null) ? this.last : config.getMaxLines();
 
-        GeminiClient client = new GeminiClient(config.getModel());
-        GeminiDebugAssistant assistant = new GeminiDebugAssistant(client);
+        GroqClient client = new GroqClient(config.getModel());
+        GroqDebugAssistant assistant = new GroqDebugAssistant(client);
         Path logFile = Path.of(file);
 
         if (!watch) {
-            System.out.println("=== Gemini Analysis ===");
+            System.out.println("=== Groq Analysis ===");
             try {
                 DebugResult result = assistant.analyze(logFile, lastN);
                 printResult(result);
@@ -76,7 +76,7 @@ public class DebugCommand implements Runnable {
         System.out.println("-------------------------------------------------");
     }
 
-    private void watchFile(Path logPath, GeminiDebugAssistant assistant, DebugConfig config) {
+    private void watchFile(Path logPath, GroqDebugAssistant assistant, DebugConfig config) {
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
             Path parentDir = logPath.getParent() != null ? logPath.getParent() : Path.of(".");
             parentDir.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
@@ -122,7 +122,7 @@ public class DebugCommand implements Runnable {
                                     if (idx++ >= toSkip) last50.add(s);
                                 }
 
-                                System.out.println("=== Gemini Analysis (Triggered by ERROR) ===");
+                                System.out.println("=== Groq Analysis (Triggered by ERROR) ===");
                                 DebugResult result = assistant.analyzeLines(last50);
                                 printResult(result);
                             }

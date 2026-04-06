@@ -22,8 +22,8 @@ public class LogServer {
     private String allowedSourcesConfig;
 
     public static void main(String[] args) {
-        if (System.getenv("GEMINI_API_KEY") == null || System.getenv("GEMINI_API_KEY").trim().isEmpty()) {
-            System.err.println("WARNING: GEMINI_API_KEY is not set.");
+        if (System.getenv("GROQ_API_KEY") == null || System.getenv("GROQ_API_KEY").trim().isEmpty()) {
+            System.err.println("WARNING: GROQ_API_KEY is not set.");
             System.err.println("Dashboard features will show a red banner until you export the key.");
         }
         SpringApplication.run(LogServer.class, args);

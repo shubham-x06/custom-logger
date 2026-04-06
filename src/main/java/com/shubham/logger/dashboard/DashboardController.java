@@ -2,8 +2,8 @@ package com.shubham.logger.dashboard;
 
 import com.shubham.logger.debug.DebugConfig;
 import com.shubham.logger.debug.DebugResult;
-import com.shubham.logger.debug.GeminiClient;
-import com.shubham.logger.debug.GeminiDebugAssistant;
+import com.shubham.logger.debug.GroqClient;
+import com.shubham.logger.debug.GroqDebugAssistant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,23 +23,23 @@ import java.util.stream.Collectors;
 @Controller
 public class DashboardController {
 
-    private final GeminiDebugAssistant assistant;
+    private final GroqDebugAssistant assistant;
     private final DebugConfig config;
 
     public DashboardController() {
         this.config = new DebugConfig();
-        GeminiClient client = null;
+        GroqClient client = null;
         try {
-            client = new GeminiClient(config.getModel()); // Might throw exception if key is missing
+            client = new GroqClient(config.getModel()); // Might throw exception if key is missing
         } catch (Exception e) {
             // Handled gracefully so dashboard still runs
         }
-        this.assistant = client != null ? new GeminiDebugAssistant(client) : null;
+        this.assistant = client != null ? new GroqDebugAssistant(client) : null;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        boolean hasApiKey = System.getenv("GEMINI_API_KEY") != null && !System.getenv("GEMINI_API_KEY").trim().isEmpty();
+        boolean hasApiKey = System.getenv("GROQ_API_KEY") != null && !System.getenv("GROQ_API_KEY").trim().isEmpty();
         model.addAttribute("hasApiKey", hasApiKey);
         return "dashboard";
     }
@@ -48,7 +48,7 @@ public class DashboardController {
     @ResponseBody
     public ResponseEntity<?> analyze(@RequestBody Map<String, Object> payload) {
         if (assistant == null) {
-            return ResponseEntity.status(500).body(Map.of("error", "GEMINI_API_KEY is missing. Configure it to use analysis."));
+            return ResponseEntity.status(500).body(Map.of("error", "GROQ_API_KEY is missing. Configure it to use analysis."));
         }
         String filePath = (String) payload.get("filePath");
         int lastN = payload.containsKey("lastN") ? Integer.parseInt(payload.get("lastN").toString()) : config.getMaxLines();

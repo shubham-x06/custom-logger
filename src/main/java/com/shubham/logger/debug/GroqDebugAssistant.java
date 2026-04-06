@@ -7,12 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-public class GeminiDebugAssistant {
-    private final GeminiClient geminiClient;
+public class GroqDebugAssistant {
+    private final GroqClient groqClient;
     private final Gson gson;
 
-    public GeminiDebugAssistant(GeminiClient geminiClient) {
-        this.geminiClient = geminiClient;
+    public GroqDebugAssistant(GroqClient groqClient) {
+        this.groqClient = groqClient;
         this.gson = new Gson();
     }
 
@@ -23,7 +23,7 @@ public class GeminiDebugAssistant {
                 "Given log output, respond ONLY in JSON with keys: rootCause (string), explanation (2-3 sentences), " +
                 "fix (specific code-level suggestion), severity (LOW/MEDIUM/HIGH).";
 
-        String jsonResponse = geminiClient.complete(systemPrompt, logTail);
+        String jsonResponse = groqClient.complete(systemPrompt, logTail);
         
         // Strip markdown fences
         jsonResponse = jsonResponse.trim();
