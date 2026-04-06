@@ -20,13 +20,17 @@ public class GeminiClient {
         }
         
         // Default to a fallback if not provided
-        String activeModel = (model == null || model.isEmpty()) ? "gemini-1.5-flash" : model;
+        String activeModel = (model == null || model.isEmpty()) ? "gemini-2.0-flash" : model;
         // Fix spaces if the user types "3.1 flash"
         activeModel = activeModel.trim().replace(" ", "-");
         
         this.apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/" + activeModel + ":generateContent?key=" + this.apiKey;
         
-        this.httpClient = new OkHttpClient();
+        this.httpClient = new OkHttpClient.Builder()
+                .connectTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+                .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+                .writeTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+                .build();
         this.gson = new Gson();
     }
 

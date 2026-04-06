@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class DebugConfig {
-    private String model = "gemini-2.5-flash";
+    private String model = "gemini-2.0-flash";
     private int maxLines = 50;
     private int watchDebounceMs = 2000;
     private String logDirectory = "./logs";

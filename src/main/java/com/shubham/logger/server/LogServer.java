@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @SpringBootApplication
+@org.springframework.context.annotation.ComponentScan(basePackages = {"com.shubham.logger"})
 @RestController
 public class LogServer {
 
@@ -21,6 +22,10 @@ public class LogServer {
     private String allowedSourcesConfig;
 
     public static void main(String[] args) {
+        if (System.getenv("GEMINI_API_KEY") == null || System.getenv("GEMINI_API_KEY").trim().isEmpty()) {
+            System.err.println("WARNING: GEMINI_API_KEY is not set.");
+            System.err.println("Dashboard features will show a red banner until you export the key.");
+        }
         SpringApplication.run(LogServer.class, args);
     }
 
