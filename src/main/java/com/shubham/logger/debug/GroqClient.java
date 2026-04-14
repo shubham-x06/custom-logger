@@ -21,7 +21,7 @@ public class GroqClient {
         }
         
         // Default to a fallback if not provided
-        this.activeModel = (model == null || model.isEmpty()) ? "llama3-8b-8192" : model;
+        this.activeModel = (model == null || model.isEmpty()) ? "llama-3.3-70b-versatile" : model;
         
         this.apiUrl = "https://api.groq.com/openai/v1/chat/completions";
         

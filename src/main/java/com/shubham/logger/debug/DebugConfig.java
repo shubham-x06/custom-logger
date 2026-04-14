@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class DebugConfig {
-    private String model = "llama3-8b-8192";
+    private String model = "llama-3.3-70b-versatile";
     private int maxLines = 50;
     private int watchDebounceMs = 2000;
     private String logDirectory = "./logs";
