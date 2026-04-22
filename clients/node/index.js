@@ -46,7 +46,7 @@ const http = require('http');
 const https = require('https');
 
 class LoggerClient {
-    constructor(baseUrl = 'http://localhost:8080') {
+    constructor(baseUrl = 'https://custom-logger.onrender.com') {
         this.baseUrl = baseUrl.replace(/\/$/, ''); // Remove trailing slash
     }
 
@@ -96,7 +96,7 @@ module.exports = LoggerClient;
 // Quick test script when run directly
 if (require.main === module) {
     const logger = new LoggerClient();
-    logger.log('INFO', 'Hello from Node.js via gRPC!', 'node-client')
-        .then(() => console.log('Log successfully sent to Java Hub'))
+    logger.log('INFO', 'Hello from Node.js!', 'node-client')
+        .then(() => console.log('Log successfully sent to Custom Logger Hub'))
         .catch(err => console.error('Failed to send log:', err.message));
 }

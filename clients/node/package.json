@@ -1,6 +1,6 @@
 {
   "name": "@shubhammittal/custom-logger-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight REST-based Node.js client for the Custom Logger Hub",
   "main": "index.js",
   "bin": {
