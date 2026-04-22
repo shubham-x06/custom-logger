@@ -1,10 +1,10 @@
 {
-  "name": "@shubham/custom-logger-client",
+  "name": "@shubhammittal/custom-logger-client",
   "version": "1.0.0",
   "description": "Lightweight REST-based Node.js client for the Custom Logger Hub",
   "main": "index.js",
   "bin": {
-    "logger-cli": "./cli.js"
+    "logger-cli": "cli.js"
   },
   "scripts": {
     "start": "node cli.js"
