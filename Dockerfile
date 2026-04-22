@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 ENV GROQ_API_KEY=''
 # Extract the jar from the build stage (assuming it's named logger-cli.jar as per logger.bat)
-COPY --from=build /app/target/custom-logger-1.0-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/custom-logger-1.0-SNAPSHOT-exec.jar app.jar
 
 # Expose HTTP port (gRPC port 9090 commented out - using REST via 8080 only)
 EXPOSE 8080
