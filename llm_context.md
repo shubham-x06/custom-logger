@@ -39,10 +39,7 @@ Defines severity levels (`DEBUG(10)`, `INFO(20)`, `ERROR(30)`). Output is filter
 
 ## 4. Current Anomalies (CRITICAL)
 
-**⚠️ `FileAppender.java` Corruption:**
-Currently, `src/main/java/com/shubham/logger/appender/FileAppender.java` is broken. It does **not** contain Java code. Instead, it seems to have been accidentally overwritten with a C++ competitive programming solution (involving a `solve` function for hierarchical graph reduction with `#include <vector>`, etc.). 
-- The `App.java` main class tries to instantiate `new FileAppender(...)`, which will fail to compile. 
-- Any task addressing this codebase should recognize that `FileAppender` needs to be entirely rewritten in Java to implement the `Appender` interface utilizing `FileWriter` or `Files.writeString`.
+No critical anomalies. FileAppender.java has been correctly implemented and implements the Appender interface using FileWriter in append mode with synchronized writes and a close() method.
 
 ## 5. Usage Example
 

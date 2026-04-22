@@ -11,14 +11,28 @@ public class AsyncAppender implements Appender {
     private final Appender wrappedAppender;
     private final BlockingQueue<LogEvent> queue;
 
+    private volatile boolean running = true;
+    private final Thread worker;
+
+    public void shutdown() {
+        running = false;
+        queue.offer(new LogEvent(null, null, null));
+        try {
+            worker.join(3000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
     public AsyncAppender(Appender wrappedAppender) {
         this.wrappedAppender = wrappedAppender;
         this.queue = new LinkedBlockingQueue<>(50);
 
-        Thread worker = new Thread(() -> {
-            while (true) {
+        this.worker = new Thread(() -> {
+            while (running) {
                 try {
                     LogEvent event = queue.take();
+                    if (event.level == null) break;
                     wrappedAppender.append(event.level, event.message, event.source);
 
                 } catch (InterruptedException e) {
@@ -27,8 +41,9 @@ public class AsyncAppender implements Appender {
                 }
             }
         });
-        worker.setDaemon(true);
-        worker.start();
+        this.worker.setDaemon(true);
+        this.worker.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
     @Override

@@ -125,6 +125,7 @@
         const filePath = document.getElementById('filePathInput').value;
         const lastN = document.getElementById('lastNInput').value;
         if (!filePath) return alert("Please specify a file path.");
+        const btn = document.querySelector('button'); btn.disabled = true; btn.textContent = 'Analyzing...';
 
         // Load logs
         document.getElementById('logPreview').textContent = 'Loading logs...';
@@ -169,14 +170,17 @@
                 if (data.severity === 'HIGH') sevBadge.classList.add('sev-high');
                 else if (data.severity === 'MEDIUM') sevBadge.classList.add('sev-medium');
                 else sevBadge.classList.add('sev-low');
+                btn.disabled = false; btn.textContent = 'Run Deep Analysis ✨';
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
                 document.getElementById('errorMsg').textContent = 'Error: ' + (data.error || 'Unknown failure');
+                btn.disabled = false; btn.textContent = 'Run Deep Analysis ✨';
             }
         } catch (e) {
             document.getElementById('loading').style.display = 'none';
             document.getElementById('errorMsg').style.display = 'block';
             document.getElementById('errorMsg').textContent = 'Connection error: ' + e.message;
+            btn.disabled = false; btn.textContent = 'Run Deep Analysis ✨';
         }
     }
 

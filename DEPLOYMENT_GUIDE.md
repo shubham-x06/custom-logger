@@ -8,12 +8,15 @@ The Java Spring Boot backend receives log events via HTTP (`:8080`) and gRPC (`:
 
 ### Quick Start with Docker
 ```bash
-# 1. Build the Docker image
-docker build -t custom-logger-server .
+# 1. Set your Groq API key
+export GROQ_API_KEY=your_key_here
 
-# 2. Run the container
-# This exposes the HTTP API on port 8080 and the gRPC API on port 9090
-docker run -d -p 8080:8080 -p 9090:9090 custom-logger-server
+# 2. Build and run with docker-compose (recommended)
+docker-compose up --build
+
+# OR build and run manually
+docker build -t custom-logger-server .
+docker run -d -p 8080:8080 -p 9090:9090 -e GROQ_API_KEY=$GROQ_API_KEY -v $(pwd)/logs:/app/logs custom-logger-server
 ```
 
 **Cloud Providers (Render, Heroku, AWS):**

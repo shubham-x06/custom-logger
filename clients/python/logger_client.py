@@ -4,20 +4,15 @@ import os
 from datetime import datetime
 
 # On-the-fly proto compilation
-try:
-    from grpc_tools import protoc
-    proto_path = os.path.join(os.path.dirname(__file__), '../../src/main/proto/log.proto')
-    proto_dir = os.path.dirname(proto_path)
-
-    protoc.main((
-        '',
-        f'-I{proto_dir}',
-        f'--python_out={os.path.dirname(__file__)}',
-        f'--grpc_python_out={os.path.dirname(__file__)}',
-        proto_path,
-    ))
-except ImportError:
-    pass
+_dir = os.path.dirname(__file__)
+if not os.path.exists(os.path.join(_dir, 'log_pb2.py')):
+    try:
+        from grpc_tools import protoc
+        proto_path = os.path.join(_dir, '../../src/main/proto/log.proto')
+        proto_dir = os.path.dirname(proto_path)
+        protoc.main(('', f'-I{proto_dir}', f'--python_out={_dir}', f'--grpc_python_out={_dir}', proto_path,))
+    except ImportError:
+        raise ImportError('grpcio-tools is required to compile the proto. Run: pip install grpcio-tools, or pre-compile log_pb2.py manually.')
 
 import log_pb2
 import log_pb2_grpc

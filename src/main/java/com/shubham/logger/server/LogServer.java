@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import com.shubham.logger.appender.AsyncAppender;
+import com.shubham.logger.appender.FileAppender;
+import com.shubham.logger.appender.ConsoleAppender;
+import com.shubham.logger.formatter.DetailedFormatter;
+import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 @org.springframework.context.annotation.ComponentScan(basePackages = {"com.shubham.logger"})
@@ -20,6 +25,14 @@ public class LogServer {
 
     @Value("${logger.allowed-sources}")
     private String allowedSourcesConfig;
+
+    @PostConstruct
+    public void configureLogger() {
+        new java.io.File("./logs").mkdirs();
+        Logger.getInstance().clearAppenders();
+        Logger.getInstance().addAppender(new ConsoleAppender(new DetailedFormatter()));
+        Logger.getInstance().addAppender(new AsyncAppender(new FileAppender("./logs/app.log", new DetailedFormatter())));
+    }
 
     public static void main(String[] args) {
         if (System.getenv("GROQ_API_KEY") == null || System.getenv("GROQ_API_KEY").trim().isEmpty()) {

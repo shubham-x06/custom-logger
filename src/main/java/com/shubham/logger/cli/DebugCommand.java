@@ -10,6 +10,7 @@ import picocli.CommandLine.Option;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.*;
+import java.nio.file.ClosedWatchServiceException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +135,9 @@ public class DebugCommand implements Runnable {
                 boolean valid = key.reset();
                 if (!valid) break;
             }
+        } catch (ClosedWatchServiceException e) {
+            System.out.println("Shutting down watcher. Goodbye!");
+            return;
         } catch (Exception e) {
             System.err.println("Watch service failed: " + e.getMessage());
         }

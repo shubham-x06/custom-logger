@@ -4,6 +4,11 @@ An end-to-end logging ecosystem built in Java that features a high-throughput as
 
 The framework not only collects and stores logs efficiently but also proactively monitors them to catch errors and suggests code-level fixes using cutting-edge LLMs (LLaMA via GroqCloud).
 
+## ⚡ Quick Start (3 steps)
+1. `export GROQ_API_KEY=your_key_here`
+2. `docker-compose up --build`
+3. Open http://localhost:8080
+
 ## 🌟 Key Features
 
 * **High-Performance Core:** Hand-rolled asynchronous, thread-safe logger utilizing the Producer-Consumer pattern and Double-Checked Locking.
@@ -157,3 +162,17 @@ java -cp target/logger-cli.jar com.shubham.logger.cli.DebugCommand --file ./logs
 ```bash
 java -cp target/logger-cli.jar com.shubham.logger.cli.DebugCommand --file ./logs/app.log --watch
 ```
+
+## 📟 CLI Command Reference
+| Command | Flags | Description |
+|---|---|---|
+| `logger log` | `--level`, `--message`, `--appender` | Emit a single log message |
+| `logger tail` | `--lines / -n` | Print last N lines of the configured log file |
+| `logger config` | `--path`, `--level` | Save default log path and level to logger-cli.properties |
+| `logger debug` | `--file`, `--last`, `--watch` | AI-powered log analysis via Groq |
+
+## 🔧 Troubleshooting
+**JAR not found:** Run `mvn clean package` before using `./logger` or `logger.bat`.
+**GROQ_API_KEY missing:** Export the key before running. Dashboard will show a red banner and CLI will exit with a clear error.
+**Port 9090 already in use:** Another gRPC process is running. Kill it with `lsof -ti:9090 | xargs kill` (Linux/Mac) or `netstat -ano | findstr :9090` then `taskkill /PID <pid> /F` (Windows).
+**Log directory permissions:** Ensure the process has write access to `./logs/`. Run `mkdir -p logs && chmod 755 logs`.

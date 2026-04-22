@@ -1,13 +1,7 @@
 {
-  "name": "node-client",
+  "name": "@shubham/custom-logger-client",
   "version": "1.0.0",
-  "description": "Node JS client for custom logger",
-  "author": "Shubham",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/shubham/custom-logger.git"
-  },
-  "license": "ISC",
+  "description": "Lightweight REST-based Node.js client for the Custom Logger Hub",
   "main": "index.js",
   "bin": {
     "logger-cli": "./cli.js"
@@ -15,9 +9,24 @@
   "scripts": {
     "start": "node cli.js"
   },
+  "keywords": [
+    "logger",
+    "logging",
+    "rest",
+    "client",
+    "custom-logger"
+  ],
+  "author": "Shubham",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shubham/custom-logger.git"
+  },
   "dependencies": {
-    "@grpc/grpc-js": "^1.9.0",
-    "@grpc/proto-loader": "^0.7.0",
     "commander": "^14.0.3"
+  },
+  "devDependencies": {
+    "@grpc/grpc-js": "^1.9.0",
+    "@grpc/proto-loader": "^0.7.0"
   }
 }

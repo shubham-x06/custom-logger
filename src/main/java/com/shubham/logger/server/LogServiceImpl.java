@@ -25,21 +25,21 @@ public class LogServiceImpl extends LogServiceGrpc.LogServiceImplBase {
 
     private Server grpcServer;
 
-    @PostConstruct
-    public void startGrpcServer() throws IOException {
-        grpcServer = ServerBuilder.forPort(9090)
-                .addService(this)
-                .build()
-                .start();
-        System.out.println("gRPC server started on port 9090");
-    }
-
-    @PreDestroy
-    public void stopGrpcServer() {
-        if (grpcServer != null) {
-            grpcServer.shutdown();
-        }
-    }
+//    @PostConstruct
+//    public void startGrpcServer() throws IOException {
+//        grpcServer = ServerBuilder.forPort(9090)
+//                .addService(this)
+//                .build()
+//                .start();
+//        System.out.println("gRPC server started on port 9090");
+//    }
+//
+//    @PreDestroy
+//    public void stopGrpcServer() {
+//        if (grpcServer != null) {
+//            grpcServer.shutdown();
+//        }
+//    }
 
     @Override
     public void send(LogEventPayload request, StreamObserver<LogResponse> responseObserver) {
